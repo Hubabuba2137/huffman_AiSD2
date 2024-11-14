@@ -204,45 +204,38 @@ list sort(list tab) {
 }
 
 huff_tree* make_huff_tree(list tab) {
-
-    while(tab.size() > 1){
+    while (tab.size() > 1) {
         tab = sort(tab);
 
         node_list* temp_p1 = tab.loc(0);
         node_list* temp_p2 = tab.loc(1);
 
-        node p1,p2;
-        p1.znak = temp_p1->sym.znak;
-        p1.wyst = temp_p1->sym.wyst;
-        p2.znak = temp_p2->sym.znak;
-        p2.wyst = temp_p2->sym.wyst;
+        node* p1 = new node(temp_p1->sym.znak, temp_p1->sym.wyst);
+        node* p2 = new node(temp_p2->sym.znak, temp_p2->sym.wyst);
 
-        node* root = new node('\0', p1.wyst + p2.wyst);
-
-        root->left = new node(p1.znak, p1.wyst);
-        root->right = new node(p2.znak, p2.wyst);
+        node* root = new node('\0', p1->wyst + p2->wyst);
+        root->left = p1;
+        root->right = p2;
 
         tab.del(temp_p1);
         tab.del(temp_p2);
 
         char_count temp;
         temp.znak = '\0';
-        temp.wyst = p1.wyst + p2.wyst;
+        temp.wyst = root->wyst;
         tab.add(temp);
     }
-    
-    node kor;
-    kor.znak = tab.head->sym.znak;
-    kor.wyst = tab.head->sym.wyst;
 
-    huff_tree *tree = new huff_tree();
-    tree->root = &kor;
+    node* kor = new node(tab.head->sym.znak, tab.head->sym.wyst);
+
+    huff_tree* tree = new huff_tree();
+    tree->root = kor;
 
     return tree;
 }
 
 int main() {
-    string text = "Lorem ipsum dolor sit amet";
+    string text = "eloele";
     list tablica = counting(text);
 
     huff_tree* tree = make_huff_tree(tablica);
